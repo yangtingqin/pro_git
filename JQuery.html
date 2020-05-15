@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <p>点我，我就会消失</p>
+        <p>继续点我</p>
+        <p>接着点我</p>
+        <div class="box">点我是隐藏class属性</div><br>
+        <div id="box1">点我是隐藏id属性</div><br>
+        <span>点我是隐藏span标签</span>
+    </div>
+    <script>
+        // $(document).ready(function () {
+        //     $('p').click(function () {
+        //         $(this).hide();
+        //     })
+        // })
+        $(function () {
+            $('p').click(function () {
+                $(this).hide();
+            })
+            $('#box1').mousedown(function () {
+                $('#box1').hide();
+            })
+            $('.box').mouseenter(function () {
+                $('.box').hide();
+            })
+            $('span').dblclick(function () {
+                $('span').hide()
+            })
+
+        })
+    </script>
+</body>
+
+</html>
