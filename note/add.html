@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加页面</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="layui/layui.all.js"></script>
+    <!-- vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .mt100 {
+            margin-top: 100px;
+        }
+
+        .tc {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h3 class="layui-bg-blue tc">登录页</h3>
+    <div class="layui-container mt100" id="app">
+        <div class="layui-row">
+            <div class="layui-col-xs4 layui-col-xs-offset4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" v-model="news.title" placeholder="请输入标题" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs4 layui-col-xs-offset4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">作者</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" v-model="news.author" placeholder="请输入作者" autocomplete="off"
+                            class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs4 layui-col-xs-offset4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="" v-model="news.desc" id="" class="layui-input" placeholder="请输入描述"
+                            keyup.enter="add()" style="height:80px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row">
+            <div class="layui-col-xs4 layui-col-xs-offset4" style="text-align:right;">
+                <button class="layui-btn layui-btn-danger" @click="add()">添加信息</button>
+            </div>
+        </div>
+        <div class="layui-row">
+
+        </div>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            news: {
+                title: "",
+                author: "",
+                desc: ""
+            }
+        },
+        methods: {
+            add() {
+                // 通过Object.values获取对象所有的值，通过includes判断是否有空值，不为空
+                console.log(Object.values(this.news));
+                if (Object.values(this.news).includes("")) {
+                    // layui的js弹出层
+                    layer.msg('请输入完整新闻信息');
+                    return;
+                }
+                // 将用户信息存入到本地存储中
+                //   判断本地存储中有没有newsArrData数据
+                let newsArrData = [];
+                if (localStorage.getItem('newsArrData')) {   //本地有数据
+                    // 将原来的数据拿出来，将这次的数据放进去，然后在将数据放在本地存储
+                    newsArrData = localStorage.getItem('newsArrData');   //现在还是一个json字符串
+                    newsArrData = JSON.parse(newsArrData);   //变成数组操作
+                    newsArrData.push(this.news)
+                } else {   //本地没有数据
+                    newsArrData = [this.news]
+                    //    将数据存入到本地存储中了
+                }
+                // 希望将用户信息存储成一个数组[{用户信息1},{用户信息2}]
+                localStorage.setItem('newsArrData', JSON.stringify(newsArrData))
+                layer.alert('添加成功了', { icon: 1 });
+                setTimeout(()=>{
+                    location.href="./admin.html"
+                },500)
+              
+                this.news.title = this.news.desc = this.news.author = ""
+
+            }
+        }
+    })
+</script>
+
+</html>

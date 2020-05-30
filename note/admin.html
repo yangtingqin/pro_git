@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻列表</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="layui/layui.all.js"></script>
+    <!-- vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .mt100 {
+            margin-top: 100px;
+        }
+
+        .tc {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h3 class="layui-bg-blue tc">新闻列表</h3>
+    <div class="layui-container" id="app">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody v-if="newslist.length">
+                <tr v-for="(item,index) in newslist" :key="index">
+                    <td>{{index+1}}</td>
+                    <td>{{item.title}}</td>
+                    <td>{{item.author}}</td>
+                    <td>{{item.desc}}</td>
+                    <td>
+                        <a :href="'edit.html?idx='+index" class="layui-btn">修改</a>
+                        <a href="" @click.prevent="del(index)" class="layui-btn ">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="5" style="text-align: center;">对不起，没有数据</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+<script>
+    let vm = new Vue({
+        el: "#app",
+        data: {
+            newslist: []
+        },
+        methods: {
+            del(idx) {    //idx就是点击这一行的下标，换而言之也是该条数据的数据中心位置。
+                // alert(idx)
+                // 让用户确认是否需要删除
+                // ui框架方法
+                layer.confirm('确认删除吗？', {
+                    btn: ['确认', '取消'] //可以无限个按钮
+                }, index => {
+                    let newsArrData = JSON.parse(localStorage.getItem('newsArrData'));  //原来数据
+                    newsArrData.splice(idx, 1);  //数据库里面数据 删除
+                    this.newslist.splice(idx, 1);  //页面的数据也 删除
+                    // 删除后重新设置本地
+                    localStorage.setItem('newsArrData', JSON.stringify(newsArrData))
+                    // 刷新页面
+                    window.location.reload();
+                }, index => {
+                    console.log('取消');
+
+                });
+
+
+            }
+        },
+        created() {  //已进入页面就查询本地存储的数据，拿到数据进行页面渲染
+            if (localStorage.getItem('newsArrData')) {
+                this.newslist = JSON.parse(localStorage.getItem('newsArrData'))
+            }
+        }
+    })
+</script>
+
+</html>
